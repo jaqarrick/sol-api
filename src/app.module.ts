@@ -6,19 +6,20 @@ import { PostsModule } from './posts/posts.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { dbConfig } from './config';
 import { User } from './users/entities/user.entity';
+import { DataSource } from 'typeorm';
+import { Post } from './posts/entities/post.entity';
 
 const typeOrmOptions = {
   ...dbConfig,
-  entities: [User]
-}
+  entities: [User, Post],
+};
+console.log(typeOrmOptions);
 
 @Module({
-  imports: [
-    UsersModule,
-    PostsModule,
-    TypeOrmModule.forRoot(typeOrmOptions),
-  ],
+  imports: [TypeOrmModule.forRoot(typeOrmOptions), UsersModule, PostsModule],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private dataSource: DataSource) {}
+}
